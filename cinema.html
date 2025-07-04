@@ -842,7 +842,7 @@
         }
 
         function goHome() {
-            window.history.back();
+            window.location.href = "kiosk_ind.html";
         }
 
         function selectTime(time) {
@@ -881,6 +881,10 @@
             seatDiv.classList.add('selected');
             selectedSeat = seatNumber;
             document.getElementById('seatNextBtn').disabled = false;
+        }
+
+        function restartPractice() {
+            location.reload();
         }
 
         // 페이지 로드시 첫 화면 보이기
