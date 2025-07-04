@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>시니아이 - 시니어를 위한 스마트한 선택</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        a{color: inherit; text-decoration: none;}
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-size: 1.3em;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            padding-top: 100px;
+            position: relative;
+        }
+
+        .hero-content h1 {
+            font-size: 4em;
+            margin-bottom: 20px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero-content p {
+            font-size: 1.5em;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            color: white;
+            padding: 20px 40px;
+            font-size: 1.4em;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+            animation: fadeInUp 1s ease-out 0.4s both;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(255, 107, 107, 0.4);
+        }
+
+        /* Kiosk Practice Section */
+        .kiosk-practice {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        }
+
+        .kiosk-practice h2 {
+            text-align: center;
+            font-size: 3em;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .section-intro {
+            text-align: center;
+            font-size: 1.3em;
+            color: #666;
+            margin-bottom: 60px;
+        }
+
+        .kiosk-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .kiosk-item {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .kiosk-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .kiosk-icon {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+        }
+
+        .kiosk-item h3 {
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .kiosk-item p {
+            font-size: 1em;
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .practice-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .practice-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .kiosk-features {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 50px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .kiosk-features h3 {
+            text-align: center;
+            font-size: 2.2em;
+            margin-bottom: 40px;
+            color: #333;
+        }
+
+        .kiosk-features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-small {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .feature-emoji {
+            font-size: 2.5em;
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        .feature-small h4 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .feature-small p {
+            font-size: 1em;
+            color: #666;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 2% auto;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 900px;
+            height: 85%;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            z-index: 10;
+        }
+
+        .close:hover {
+            color: #333;
+            transform: scale(1.1);
+        }
+
+        .kiosk-simulator {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(145deg, #2c3e50, #34495e);
+            border-radius: 15px;
+            padding: 30px;
+            color: white;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .kiosk-screen {
+            background: white;
+            color: #333;
+            padding: 40px;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 700px;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .kiosk-screen h3 {
+            font-size: 2.2em;
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+
+        .kiosk-screen p {
+            font-size: 1.3em;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        .kiosk-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .kiosk-btn {
+            padding: 20px 25px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: linear-gradient(145deg, #667eea, #764ba2);
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .kiosk-btn:hover {
+            background: linear-gradient(145deg, #5a6fd8, #6a4190);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .kiosk-btn:active {
+            transform: translateY(0);
+        }
+
+        .step-indicator {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            background: rgba(102, 126, 234, 0.1);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: #667eea;
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        /* Footer */
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 60px 0;
+        }
+
+        .footer-content h3 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+
+        .footer-content p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .contact-item {
+            font-size: 1.1em;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero-content h1 {
+                font-size: 2.5em;
+            }
+            
+            .hero-content p {
+                font-size: 1.2em;
+            }
+            
+            .kiosk-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-info {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .modal-content {
+                margin: 5% auto;
+                height: 90%;
+                width: 95%;
+            }
+
+            .kiosk-buttons {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <a href="index.html" class="logo">시니아이</a>
+            <ul class="nav-links">
+                <li><a href="#kiosk-practice">키오스크 연습</a></li>
+                <li><a href="#contact">연락처</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>시니아이</h1>
+            <p>시니어를 위한 스마트한 기술 교육과 편리한 디지털 생활을 제공합니다</p>
+            <a href="#kiosk-practice" class="cta-button">키오스크 연습하기</a>
+        </div>
+    </section>
+
+    <section id="kiosk-practice" class="kiosk-practice">
+        <div class="container">
+            <h2>키오스크 연습하기</h2>
+            <p class="section-intro">실제 키오스크와 동일한 환경에서 미리 연습해보세요</p>
+            
+            <div class="kiosk-grid">
+                <div class="kiosk-item">
+                    <div class="kiosk-icon">🍔</div>
+                    <h3>패스트푸드점</h3>
+                    <p>맥도날드, 버거킹, KFC 등<br>메뉴 선택부터 결제까지</p>
+                    <button class="practice-btn" onclick="startKioskPractice('fastfood')"><a href="ham.html">연습하기</a></button>
+                </div>
+                
+                <div class="kiosk-item">
+                    <div class="kiosk-icon">☕</div>
+                    <h3>카페</h3>
+                    <p>스타벅스, 이디야, 투썸플레이스<br>음료 주문과 적립카드 사용</p>
+                    <button class="practice-btn" onclick="startKioskPractice('cafe')"><a href="cafe.html">연습하기</a></button>
+                </div>
+                
+                <div class="kiosk-item">
+                    <div class="kiosk-icon">🏥</div>
+                    <h3>병원</h3>
+                    <p>접수, 진료과 선택, 번호표 발급<br>건강보험카드 사용법</p>
+                    <button class="practice-btn" onclick="startKioskPractice('hospital')"><a href="host.html">연습하기</a></button>
+                </div>
+                
+                <div class="kiosk-item">
+                    <div class="kiosk-icon">🎬</div>
+                    <h3>영화관</h3>
+                    <p>영화 선택, 좌석 예약, 할인 적용<br>티켓 발권까지</p>
+                    <button class="practice-btn" onclick="startKioskPractice('cinema')"><a href="cinema.html">연습하기</a></button>
+                </div>
+            </div>
+            
+            <div class="kiosk-features">
+                <h3>키오스크 연습의 특별한 기능</h3>
+                <div class="kiosk-features-grid">
+                    <div class="feature-small">
+                        <span class="feature-emoji">🎯</span>
+                        <h4>단계별 가이드</h4>
+                        <p>각 단계마다 친절한 안내</p>
+                    </div>
+                    <div class="feature-small">
+                        <span class="feature-emoji">🔄</span>
+                        <h4>반복 연습</h4>
+                        <p>익숙해질 때까지 계속</p>
+                    </div>
+                    <div class="feature-small">
+                        <span class="feature-emoji">💡</span>
+                        <h4>실수 방지 팁</h4>
+                        <p>자주 하는 실수와 해결법</p>
+                    </div>
+                    <div class="feature-small">
+                        <span class="feature-emoji">📱</span>
+                        <h4>실제와 동일</h4>
+                        <p>실제 키오스크와 같은 화면</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 키오스크 시뮬레이터 모달 -->
+    <div id="kioskModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div class="kiosk-simulator">
+                <div class="kiosk-screen" id="kioskScreen">
+                    <div class="progress-bar" id="progressBar"></div>
+                    <div class="step-indicator" id="stepIndicator">1/5 단계</div>
+                    <h3>키오스크 연습</h3>
+                    <p>연습할 키오스크를 선택해주세요.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <h3>시니아이</h3>
+                <p>시니어를 위한 따뜻한 기술, 편리한 생활</p>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        📞 1588-0000
+                    </div>
+                    <div class="contact-item">
+                        📧 contact@seniai.com
+                    </div>
+                    <div class="contact-item">
+                        🏢 서울특별시 강남구 테헤란로 123
+                    </div>
+                </div>
+                <p style="margin-top: 40px; font-size: 0.9em; color: #999;">
+                    © 2025 시니아이. 모든 권리 보유.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let currentStep = 1;
+        let maxSteps = 5;
+        let currentKioskType = '';
+        let orderData = {};
+
+                // 부드러운 스크롤 효과
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // 스크롤 시 헤더 효과
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(255, 255, 255, 0.98)';
+            } else {
+                header.style.background = 'rgba(255, 255, 255, 0.95)';
+            }
+        });
+
+        // 키오스크 연습 시작
+        function startKioskPractice(type) {
+            currentKioskType = type;
+            currentStep = 1;
+            maxSteps = kioskScenarios[type].steps.length;
+            orderData = {};
+            
+            document.getElementById('kioskModal').style.display = 'block';
+            updateScreen();
+            updateProgress();
+        }
+
+        // 화면 업데이트
+        function updateScreen() {
+            const scenario = kioskScenarios[currentKioskType];
+            const step = scenario.steps[currentStep - 1];
+            const screen = document.getElementById('kioskScreen');
+            
+            screen.innerHTML = `
+                <div class="progress-bar" id="progressBar"></div>
+                <div class="step-indicator">${currentStep}/${maxSteps} 단계</div>
+                <h3>${scenario.title}</h3>
+                <p>${step.content}</p>
+                <div class="kiosk-buttons">
+                    ${

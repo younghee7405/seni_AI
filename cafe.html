@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>카페 키오스크 연습 - 시니아이</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        a{color: inherit; text-decoration: none;}
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .kiosk-container {
+            background: #2c3e50;
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .kiosk-screen {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            min-height: 600px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .logo {
+            font-size: 2.5em;
+            color: #00704A;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .step-indicator {
+            background: rgba(0, 112, 74, 0.1);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            color: #00704A;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .progress-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: #00704A;
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        .screen-content {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .screen-title {
+            font-size: 2.2em;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .screen-subtitle {
+            font-size: 1.3em;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .menu-item {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .menu-item:hover {
+            border-color: #00704A;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 112, 74, 0.2);
+        }
+
+        .menu-item.selected {
+            border-color: #00704A;
+            background: rgba(0, 112, 74, 0.1);
+        }
+
+        .menu-item-image {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .menu-item-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .menu-item-price {
+            font-size: 1.1em;
+            color: #00704A;
+            font-weight: bold;
+        }
+
+        .option-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .option-btn {
+            padding: 12px 25px;
+            border: 2px solid #00704A;
+            background: white;
+            color: #00704A;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .option-btn:hover, .option-btn.selected {
+            background: #00704A;
+            color: white;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .quantity-btn {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #00704A;
+            background: white;
+            color: #00704A;
+            border-radius: 50%;
+            font-size: 1.5em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quantity-btn:hover {
+            background: #00704A;
+            color: white;
+        }
+
+        .quantity-display {
+            font-size: 2em;
+            font-weight: bold;
+            color: #333;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .cart-summary {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-total {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #00704A;
+            text-align: right;
+            margin-top: 15px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .action-btn {
+            padding: 18px 40px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #00704A;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #005a3a;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .payment-method {
+            padding: 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .payment-method:hover, .payment-method.selected {
+            border-color: #00704A;
+            background: rgba(0, 112, 74, 0.1);
+        }
+
+        .payment-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .payment-name {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .completion-screen {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .completion-icon {
+            font-size: 5em;
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+
+        .completion-message {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .order-number {
+            font-size: 3em;
+            font-weight: bold;
+            color: #00704A;
+            margin-bottom: 30px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .help-tip {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            color: #856404;
+        }
+
+        .help-tip strong {
+            color: #533f00;
+        }
+
+        @media (max-width: 768px) {
+            .kiosk-container {
+                padding: 20px;
+            }
+
+            .menu-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 15px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .payment-methods {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="kiosk-container">
+        <div class="kiosk-screen">
+            <div class="progress-bar" id="progressBar"></div>
+            
+            <!-- 시작 화면 -->
+            <div id="startScreen" class="screen">
+                <div class="header">
+                    <div class="logo">☕ 카페 키오스크</div>
+                    <div class="step-indicator">1/6 단계</div>
+                </div>
+                <div class="screen-content">
+                    <h2 class="screen-title">환영합니다!</h2>
+                    <p class="screen-subtitle">주문을 시작하시려면 화면을 터치해주세요</p>
+                    <div class="help-tip">
+                        <strong>💡 도움말:</strong> 실제 키오스크처럼 화면을 터치하여 주문해보세요. 천천히 따라하시면 됩니다.
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="action-btn btn-primary" onclick="nextStep()">주문 시작하기</button>
+                </div>
+            </div>
+
+            <!-- 메뉴 선택 화면 -->
+            <div id="menuScreen" class="screen hidden">
+                <div class="header">
+                    <div class="logo">☕ 카페 키오스크</div>
+                    <div class="step-indicator">2/6 단계</div>
+                </div>
+                <div class="screen-content">
+                    <h2 class="screen-title">메뉴를 선택해주세요</h2>
+                    <div class="help-tip">
+                        <strong>💡 도움말:</strong> 원하는 음료를 선택하세요. 메뉴를 터치하면 다음 단계로 넘어갑니다.
+                    </div>
+                    <div class="menu-grid">
+                        <div class="menu-item" onclick="selectMenu('americano', '아메리카노', 4500)">
+                            <div class="menu-item-image">☕</div>
+                            <div class="menu-item-name">아메리카노</div>
+                            <div class="menu-item-price">4,500원</div>
+                        </div>
+                        <div class="menu-item" onclick="selectMenu('latte', '카페라떼', 5500)">
+                            <div class="menu-item-image">🥛</div>
+                            <div class="menu-item-name">카페라떼</div>
+                            <div class="menu-item-price">5,500원</div>
+                        </div>
+                        <div class="menu-item" onclick="selectMenu('cappuccino', '카푸치노', 5500)">
+                            <div class="menu-item-image">☕</div>
+                            <div class="menu-item-name">카푸치노</div>
+                            <div class="menu-item-price">5,500원</div>
+                        </div>
+                        <div class="menu-item" onclick="selectMenu('macchiato', '마키아토', 6000)">
+                            <div class="menu-item-image">🥛</div>
+                            <div class="menu-item-name">마키아토</div>
+                            <div class="menu-item-price">6,000원</div>
+                        </div>
+                        <div class="menu-item" onclick="selectMenu('mocha', '모카', 6500)">
+                            <div class="menu-item-image">☕</div>
+                            <div class="menu-item-name">모카</div>
+                            <div class="menu-item-price">6,500원</div>
+                        </div>
+                        <div class="menu-item" onclick="selectMenu('frappuccino', '프라푸치노', 7000)">
+                            <div class="menu-item-image">🥤</div>
+                            <div class="menu-item-name">프라푸치노</div>
+                            <div class="menu-item-price">7,000원</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 옵션 선택 화면 -->
+            <div id="optionScreen" class="screen hidden">
+                <div class="header">
+                    <div class="logo">☕ 카페 키오스크</div>
+                    <div class="step-indicator">3/6 단계</div>
+                </div>
+                <div class="screen-content">
+                    <h2 class="screen-title">옵션을 선택해주세요</h2>
+                    <p class="screen-subtitle" id="selectedMenuItem">선택한 메뉴: </p>
+                    <div class="help-tip">
+                        <strong>💡 도움말:</strong> 음료 사이즈와 온도를 선택하세요. 선택 후 확인 버튼을 누르세요.
+                    </div>
+                    
+                    <h3 style="margin-bottom: 15px;">사이즈</h3>
+                    <div class="option-buttons">
+                        <button class="option-btn" onclick="selectSize('small', 0)">Small (+0원)</button>
+                        <button class="option-btn" onclick="selectSize('medium', 500)">Medium (+500원)</button>
+                        <button class="option-btn" onclick="selectSize('large', 1000)">Large (+1,000원)</button>
+                    </div>
+
+                    <h3 style="margin-bottom: 15px;">온도</h3>
+                    <div class="option-buttons">
+                        <button class="option-btn" onclick="selectTemperature('hot')">🔥 Hot</button>
+                        <button class="option-btn" onclick="selectTemperature('ice')">🧊 Ice</button>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="action-btn btn-secondary" onclick="goBack()">이전</button>
+                    <button class="action-btn btn-primary" onclick="nextStep()">확인</button>
+                </div>
+            </div>
+
+            <!-- 수량 선택 화면 -->
+            <div id="quantityScreen" class="screen hidden">
+                <div class="header">
+                    <div class="logo">☕ 카페 키오스크</div>
+                    <div class="step-indicator">4/6 단계</div>
+                </div>
+                <div class="screen-content">
+                    <h2 class="screen-title">수량을 선택해주세요</h2>
+                    <div class="help-tip">
+                        <strong>💡 도움말:</strong> + 또는 - 버튼을 눌러 수량을 조절하세요.
+                    </div>
+                    <div class="quantity-selector">
+                        <button class="quantity-btn" onclick="changeQuantity(-1)">-</button>
+                        <div class="quantity-display" id="quantityDisplay">1</div>
+                        <button class="quantity-btn" onclick="changeQuantity(1)">+</button>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="action-btn btn-secondary" onclick="goBack()">이전</button>
+                    <button class="action-btn btn-primary" onclick="nextStep()">장바구니 담기</button>
+                </div>
+            </div>
+
+            <!-- 주문 확인 화면 -->
+            <div id="cartScreen" class="screen hidden">
+                <div class="header">
+                    <div class="logo">☕ 카페 키오스크</div>
+                    <div class="step-indicator">5/6 단계</div>
+                </div>
+                <div class="screen-content">
+                    <h2 class="screen-title">주문 내역을 확인해주세요</h2>
+                    <div class="help-tip">
+                        <strong>💡 도움말:</strong> 주문 내역이 맞는지 확인하고 결제를 진행하세요.
+                    </div>
+                    <div class="cart-summary">
+                        <div id="cartItems"></div>
+                        <div class="cart-total" id="cartTotal">총 결제금액: 0원</div>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="action-btn btn-secondary" onclick="goBack()">이전</button>
+                    <button class="action-btn btn-primary" onclick="nextStep()">결제하기</button>
+                </div>
+            </div>
+
+            <!-- 결제 선택 화면 -->
+            <div id="paymentScreen" class="screen hidden">
+                <div class="header">
+                    <div class="logo">☕ 카페 키오스크</div>
+                    <div class="step-indicator">6/6 단계</div>
+                </div>
+                <div class="screen-content">
+                    <h2 class="screen-title">결제 방법을 선택해주세요</h2>
+                    <div class="help-tip">
+                        <strong>💡 도움말:</strong> 원하는 결제 방법을 선택하세요. 카드나 휴대폰으로 간편하게 결제할 수 있습니다.
+                    </div>
+                    <div class="payment-methods">
+                        <div class="payment-method" onclick="selectPayment('card')">
+                            <div class="payment-icon">💳</div>
+                            <div class="payment-name">신용카드</div>
+                        </div>
+                        <div class="payment-method" onclick="selectPayment('phone')">
+                            <div class="payment-icon">📱</div>
+                            <div class="payment-name">휴대폰 결제</div>
+                        </div>
+                        <div class="payment-method" onclick="selectPayment('cash')">
+                            <div class="payment-icon">💰</div>
+                            <div class="payment-name">현금</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="action-btn btn-secondary" onclick="goBack()">이전</button>
+                </div>
+            </div>
+
+            <!-- 주문 완료 화면 -->
+            <div id="completionScreen" class="screen hidden">
+                <div class="header">
+                    <div class="logo">☕ 카페 키오스크</div>
+                </div>
+                <div class="completion-screen">
+                    <div class="completion-icon">✅</div>
+                    <h2 class="completion-message">주문이 완료되었습니다!</h2>
+                    <div class="order-number" id="orderNumber">주문번호: 001</div>
+                    <p style="font-size: 1.2em; color: #666; margin-bottom: 30px;">
+                        주문하신 음료는 약 5분 후에 준비됩니다.<br>
+                        주문번호가 불리면 카운터에서 받아가세요.
+                    </p>
+                    <div class="action-buttons">
+                        <button class="action-btn btn-primary" onclick="restartPractice()">다시 연습하기</button>
+                        <button class="action-btn btn-secondary" onclick="goHome()">홈으로 돌아가기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        let maxSteps = 6;
+        let selectedMenu = null;
+        let selectedSize = null;
+        let selectedTemperature = null;
+        let quantity = 1;
+        let totalPrice = 0;
+
+        // 진행률 업데이트
+        function updateProgress() {
+            const progress = (currentStep / maxSteps) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        // 다음 단계
+        function nextStep() {
+            if (currentStep < maxSteps) {
+                hideAllScreens();
+                currentStep++;
+                showCurrentScreen();
+                updateProgress();
+            }
+        }
+
+        // 이전 단계
+        function goBack() {
+            if (currentStep > 1) {
+                hideAllScreens();
+                currentStep--;
+                showCurrentScreen();
+                updateProgress();
+            }
+        }
+
+        // 모든 화면 숨기기
+        function hideAllScreens() {
+            const screens = document.querySelectorAll('.screen');
+            screens.forEach(screen => screen.classList.add('hidden'));
+        }
+
+        // 현재 화면 표시
+        function showCurrentScreen() {
+            const screenMap = {
+                1: 'startScreen',
+                2: 'menuScreen',
+                3: 'optionScreen',
+                4: 'quantityScreen',
+                5: 'cartScreen',
+                6: 'paymentScreen'
+            };
+            
+            const screenId = screenMap[currentStep];
+            if (screenId) {
+                document.getElementById(screenId).classList.remove('hidden');
+            }
+        }
+
+        // 메뉴 선택
+        function selectMenu(id, name, price) {
+            selectedMenu = { id, name, price };
+            document.getElementById('selectedMenuItem').textContent = `선택한 메뉴: ${name} (${price.toLocaleString()}원)`;
+            
+            // 메뉴 선택 표시
+            const menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach(item => item.classList.remove('selected'));
+            event.target.closest('.menu-item').classList.add('selected');
+            
+            setTimeout(() => {
+                nextStep();
+            }, 500);
+        }
+
+        // 사이즈 선택
+        function selectSize(size, extraPrice) {
+            selectedSize = { size, extraPrice };
+            
+            // 사이즈 버튼 선택 표시
+            const sizeButtons = document.querySelectorAll('.option-btn');
+            sizeButtons.forEach(btn => btn.classList.remove('selected'));
+            event.target.classList.add('selected');
+        }
+
+        // 온도 선택
+        function selectTemperature(temp) {
+            selectedTemperature = temp;
+            
+            // 온도 버튼 선택 표시
+            const tempButtons = document.querySelectorAll('.option-btn');
+            tempButtons.forEach(btn => {
+                if (btn.textContent.includes('Hot') || btn.textContent.includes('Ice')) {
+                    btn.classList.remove('selected');
+                }
+            });
+            event.target.classList.add('selected');
+        }
+
+        // 수량 변경
+        function changeQuantity(change) {
+            quantity = Math.max(1, Math.min(10, quantity + change));
+            document.getElementById('quantityDisplay').textContent = quantity;
+        }
+
+        // 장바구니 업데이트
+        function updateCart() {
+            if (!selectedMenu || !selectedSize || !selectedTemperature) return;
+            
+            const itemPrice = selectedMenu.price + selectedSize.extraPrice;
+            totalPrice = itemPrice * quantity;
+            
+            const cartItems = document.getElementById('cartItems');
+            cartItems.innerHTML = `
+                <div class="cart-item">
+                    <div>
+                        <div style="font-weight: bold;">${selectedMenu.name}</div>
+                        <div style="font-size: 0.9em; color: #666;">
+                            ${selectedSize.size.toUpperCase()} / ${selectedTemperature === 'hot' ? '뜨거움' : '차가움'} / ${quantity}개
+                        </div>
+                    </div>
+                    <div style="font-weight: bold;">${totalPrice.toLocaleString()}원</div>
+                </div>
+            `;
+            
+            document.getElementById('cartTotal').textContent = `총 결제금액: ${totalPrice.toLocaleString()}원`;
+        }
+
+        // 결제 방법 선택
+        function selectPayment(method) {
+            const paymentMethods = document.querySelectorAll('.payment-method');
+            paymentMethods.forEach(pm => pm.classList.remove('selected'));
+            event.target.closest('.payment-method').classList.add('selected');
+            
+            setTimeout(() => {
+                completeOrder();
+            }, 1000);
+        }
+
+        // 주문 완료
+        function completeOrder() {
+            const orderNumber = String(Math.floor(Math.random() * 900) + 100);
+            document.getElementById('orderNumber').textContent = `주문번호: ${orderNumber}`;
+            
+            hideAllScreens();
+            document.getElementById('completionScreen').classList.remove('hidden');
+        }
+
+        // 연습 다시 시작
+        function restartPractice() {
+            currentStep = 1;
+            selectedMenu = null;
+            selectedSize = null;
+            selectedTemperature = null;
+            quantity = 1;
+            totalPrice = 0;
+            
+            hideAllScreens();
+            document.getElementById('startScreen').classList.remove('hidden');
+            updateProgress();
+        }
+
+        // 홈으로 돌아가기
+        function goHome() {
+            window.history.back();
+        }
+
+        // 화면 전환 시 장바구니 업데이트
+        function showCurrentScreen() {
+            const screenMap = {
+                1: 'startScreen',
+                2: 'menuScreen',
+                3: 'optionScreen',
+                4: 'quantityScreen',
+                5: 'cartScreen',
+                6: 'paymentScreen'
+            };
+            
+            const screenId = screenMap[currentStep];
+            if (screenId) {
+                document.getElementById(screenId).classList.remove('hidden');
+                
+                // 장바구니 화면일 때 업데이트
+                if (screenId === 'cartScreen') {
+                    updateCart();
+                }
+            }
+        }
+
+        // 초기 설정
+        updateProgress();
+    </script>
+</body>
+</html>

@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>맥도날드 키오스크 - 실제 주문 체험</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        a{color: inherit; text-decoration: none;}
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ffd93d 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .kiosk-frame {
+            width: 900px;
+            height: 700px;
+            background: #333;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .kiosk-screen {
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .kiosk-header {
+            background: #ffcc02;
+            padding: 20px;
+            text-align: center;
+            color: #333;
+            font-size: 1.8em;
+            font-weight: bold;
+            border-bottom: 3px solid #ff6b6b;
+        }
+        
+        .kiosk-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .welcome-screen {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+        
+        .welcome-screen h2 {
+            font-size: 3em;
+            color: #ff6b6b;
+            margin-bottom: 20px;
+        }
+        
+        .welcome-screen p {
+            font-size: 1.5em;
+            color: #666;
+            margin-bottom: 40px;
+        }
+        
+        .start-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ff5252);
+            color: white;
+            border: none;
+            padding: 25px 50px;
+            font-size: 1.5em;
+            font-weight: bold;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+        }
+        
+        .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255, 107, 107, 0.4);
+        }
+        
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .menu-item {
+            background: white;
+            border: 3px solid #eee;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .menu-item:hover {
+            border-color: #ff6b6b;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.2);
+        }
+        
+        .menu-item.selected {
+            border-color: #ff6b6b;
+            background: #fff5f5;
+        }
+        
+        .menu-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+        
+        .menu-item h3 {
+            font-size: 1.3em;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        
+        .menu-item .price {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #ff6b6b;
+        }
+        
+        .quantity-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .qty-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .qty-btn:hover {
+            background: #ff5252;
+            transform: scale(1.1);
+        }
+        
+        .qty-display {
+            background: #f5f5f5;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 1.1em;
+            font-weight: bold;
+            min-width: 40px;
+            text-align: center;
+        }
+        
+        .order-summary {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+        
+        .order-summary h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+        
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .order-item:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #ff6b6b;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .action-btn {
+            padding: 18px 40px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            /* min-width: 140px; */
+
+        }
+        
+        .back-btn {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .back-btn:hover {
+            background: #5a6268;
+        }
+        
+        .next-btn {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+        }
+        
+        .next-btn:hover {
+            background: linear-gradient(45deg, #218838, #1aa179);
+        }
+        
+        .next-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .payment-method {
+            background: white;
+            border: 3px solid #eee;
+            border-radius: 15px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .payment-method:hover {
+            border-color: #ff6b6b;
+            transform: translateY(-3px);
+        }
+        
+        .payment-method.selected {
+            border-color: #ff6b6b;
+            background: #fff5f5;
+        }
+        
+        .payment-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .completion-screen {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+        
+        .completion-screen h2 {
+            font-size: 2.5em;
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+        
+        .receipt {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: left;
+            max-width: 400px;
+        }
+        
+        .receipt h4 {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .receipt-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            padding: 5px 0;
+            border-bottom: 1px dotted #ccc;
+        }
+        
+        .receipt-total {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #ff6b6b;
+            border-bottom: 2px solid #ff6b6b;
+            margin-top: 10px;
+        }
+        
+        .order-number {
+            background: #ff6b6b;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        
+        .screen-title {
+            text-align: center;
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .step {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .step.active {
+            background: #ff6b6b;
+        }
+        
+        .step.completed {
+            background: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <div class="kiosk-frame">
+        <div class="kiosk-screen">
+            <div class="kiosk-header">
+                <div id="headerTitle">맥도날드 키오스크</div>
+            </div>
+            
+            <div class="kiosk-content">
+                <!-- 시작 화면 -->
+                <div id="welcomeScreen" class="welcome-screen">
+                    <h2>🍔 환영합니다!</h2>
+                    <p>주문을 시작하려면 화면을 터치해주세요</p>
+                    <button class="start-btn" onclick="startOrder()">주문 시작하기</button>
+                </div>
+                
+                <!-- 메뉴 선택 화면 -->
+                <div id="menuScreen" class="hidden">
+                    <div class="step-indicator">
+                        <div class="step active">1</div>
+                        <div class="step">2</div>
+                        <div class="step">3</div>
+                    </div>
+                    <h2 class="screen-title">메뉴를 선택해주세요</h2>
+                    <div class="menu-grid" id="menuGrid">
+                        <!-- 메뉴 아이템들이 여기에 동적으로 추가됩니다 -->
+                    </div>
+                    <div class="order-summary" id="orderSummary">
+                        <h3>주문 내역</h3>
+                        <div id="orderItems"></div>
+                        <div class="order-item">
+                            <span>총 금액:</span>
+                            <span id="totalAmount">0원</span>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="action-btn back-btn" onclick="goBack()">이전</button>
+                        <button class="action-btn next-btn" id="nextToPayment" onclick="goToPayment()" disabled>결제하기</button>
+                    </div>
+                </div>
+                
+                <!-- 결제 방법 선택 화면 -->
+                <div id="paymentScreen" class="hidden">
+                    <div class="step-indicator">
+                        <div class="step completed">1</div>
+                        <div class="step active">2</div>
+                        <div class="step">3</div>
+                    </div>
+                    <h2 class="screen-title">결제 방법을 선택해주세요</h2>
+                    <div class="payment-methods" id="paymentMethods">
+                        <div class="payment-method" onclick="selectPayment('card')">
+                            <div class="payment-icon">💳</div>
+                            <h3>카드 결제</h3>
+                        </div>
+                        <div class="payment-method" onclick="selectPayment('cash')">
+                            <div class="payment-icon">💵</div>
+                            <h3>현금 결제</h3>
+                        </div>
+                        <div class="payment-method" onclick="selectPayment('pay')">
+                            <div class="payment-icon">📱</div>
+                            <h3>간편 결제</h3>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="action-btn back-btn" onclick="goBackToMenu()">이전</button>
+                        <button class="action-btn next-btn" id="completePayment" onclick="completeOrder()" disabled>결제 완료</button>
+                    </div>
+                </div>
+                
+                <!-- 주문 완료 화면 -->
+                <div id="completionScreen" class="hidden completion-screen">
+                    <div class="step-indicator">
+                        <div class="step completed">1</div>
+                        <div class="step completed">2</div>
+                        <div class="step completed">3</div>
+                    </div>
+                    <h2>🎉 주문이 완료되었습니다!</h2>
+                    <div class="order-number" id="orderNumber">주문번호: 123</div>
+                    <div class="receipt" id="receipt">
+                        <!-- 영수증 내용이 여기에 표시됩니다 -->
+                    </div>
+                    <p style="font-size: 1.2em; color: #666; margin-top: 20px;">
+                        카운터에서 주문번호를 확인한 후 음식을 받아가세요!
+                    </p>
+                    <div class="action-buttons">
+                        <button class="action-btn next-btn" onclick="startNewOrder()">새로운 주문</button>
+                        <button class="action-btn btn-secondary" onclick="goHome()">홈으로 돌아가기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 메뉴 데이터
+        const menuItems = [
+            { id: 'bigmac', name: '빅맥', price: 6500, icon: '🍔' },
+            { id: 'quarter', name: '쿼터파운더', price: 7000, icon: '🍔' },
+            { id: 'mcchicken', name: '맥치킨', price: 5500, icon: '🐔' },
+            { id: 'filet', name: '필레오피쉬', price: 5000, icon: '🐟' },
+            { id: 'nuggets', name: '치킨너겟', price: 4000, icon: '🍗' },
+            { id: 'fries', name: '감자튀김', price: 2000, icon: '🍟' },
+            { id: 'coke', name: '콜라', price: 1500, icon: '🥤' },
+            { id: 'coffee', name: '아메리카노', price: 2000, icon: '☕' }
+        ];
+        
+        let currentOrder = {};
+        let selectedPayment = '';
+        let currentScreen = 'welcome';
+        
+        // 주문 시작
+        function startOrder() {
+            currentScreen = 'menu';
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            document.getElementById('menuScreen').classList.remove('hidden');
+            renderMenu();
+        }
+        function goHome() {
+            window.history.back();
+        }
+
+
+        // 메뉴 렌더링
+        function renderMenu() {
+            const menuGrid = document.getElementById('menuGrid');
+            menuGrid.innerHTML = '';
+            
+            menuItems.forEach(item => {
+                const menuDiv = document.createElement('div');
+                menuDiv.className = 'menu-item';
+                menuDiv.innerHTML = `
+                    <div class="menu-icon">${item.icon}</div>
+                    <h3>${item.name}</h3>
+                    <div class="price">${item.price.toLocaleString()}원</div>
+                    <div class="quantity-controls">
+                        <button class="qty-btn" onclick="changeQuantity('${item.id}', -1)">-</button>
+                        <div class="qty-display">${currentOrder[item.id] || 0}</div>
+                        <button class="qty-btn" onclick="changeQuantity('${item.id}', 1)">+</button>
+                    </div>
+                `;
+                menuGrid.appendChild(menuDiv);
+            });
+        }
+        
+        // 수량 변경
+        function changeQuantity(itemId, change) {
+            if (!currentOrder[itemId]) {
+                currentOrder[itemId] = 0;
+            }
+            
+            currentOrder[itemId] += change;
+            
+            if (currentOrder[itemId] <= 0) {
+                delete currentOrder[itemId];
+            }
+            
+            renderMenu();
+            updateOrderSummary();
+        }
+        
+        // 주문 요약 업데이트
+        function updateOrderSummary() {
+            const orderItems = document.getElementById('orderItems');
+            const totalAmount = document.getElementById('totalAmount');
+            const nextBtn = document.getElementById('nextToPayment');
+            
+            orderItems.innerHTML = '';
+            let total = 0;
+            
+            Object.keys(currentOrder).forEach(itemId => {
+                const item = menuItems.find(m => m.id === itemId);
+                const quantity = currentOrder[itemId];
+                const itemTotal = item.price * quantity;
+                total += itemTotal;
+                
+                const orderDiv = document.createElement('div');
+                orderDiv.className = 'order-item';
+                orderDiv.innerHTML = `
+                    <span>${item.name} x ${quantity}</span>
+                    <span>${itemTotal.toLocaleString()}원</span>
+                `;
+                orderItems.appendChild(orderDiv);
+            });
+            
+            totalAmount.textContent = total.toLocaleString() + '원';
+            nextBtn.disabled = total === 0;
+        }
+        
+        // 결제 화면으로 이동
+        function goToPayment() {
+            currentScreen = 'payment';
+            document.getElementById('menuScreen').classList.add('hidden');
+            document.getElementById('paymentScreen').classList.remove('hidden');
+        }
+        
+        // 결제 방법 선택
+        function selectPayment(method) {
+            selectedPayment = method;
+            
+            // 모든 결제 방법의 선택 해제
+            document.querySelectorAll('.payment-method').forEach(el => {
+                el.classList.remove('selected');
+            });
+            
+            // 선택된 결제 방법 표시
+            event.target.closest('.payment-method').classList.add('selected');
+            
+            // 결제 완료 버튼 활성화
+            document.getElementById('completePayment').disabled = false;
+        }
+        
+        // 주문 완료
+        function completeOrder() {
+            currentScreen = 'completion';
+            document.getElementById('paymentScreen').classList.add('hidden');
+            document.getElementById('completionScreen').classList.remove('hidden');
+            
+            // 랜덤 주문번호 생성
+            const orderNumber = Math.floor(Math.random() * 900) + 100;
+            document.getElementById('orderNumber').textContent = `주문번호: ${orderNumber}`;
+            
+            // 영수증 생성
+            generateReceipt();
+        }
+        
+        // 영수증 생성
+        function generateReceipt() {
+            const receipt = document.getElementById('receipt');
+            let receiptHTML = '<h4>맥도날드 영수증</h4>';
+            let total = 0;
+            
+            Object.keys(currentOrder).forEach(itemId => {
+                const item = menuItems.find(m => m.id === itemId);
+                const quantity = currentOrder[itemId];
+                const itemTotal = item.price * quantity;
+                total += itemTotal;
+                
+                receiptHTML += `
+                    <div class="receipt-item">
+                        <span>${item.name} x ${quantity}</span>
+                        <span>${itemTotal.toLocaleString()}원</span>
+                    </div>
+                `;
+            });
+            
+            receiptHTML += `
+                <div class="receipt-item receipt-total">
+                    <span>총 금액</span>
+                    <span>${total.toLocaleString()}원</span>
+                </div>
+            `;
+            
+            receipt.innerHTML = receiptHTML;
+        }
+        
+        // 이전 버튼
+        function goBack() {
+            currentScreen = 'welcome';
+            document.getElementById('menuScreen').classList.add('hidden');
+            document.getElementById('welcomeScreen').classList.remove('hidden');
+        }
+        
+        // 메뉴로 돌아가기
+        function goBackToMenu() {
+            currentScreen = 'menu';
+            document.getElementById('paymentScreen').classList.add('hidden');
+            document.getElementById('menuScreen').classList.remove('hidden');
+        }
+        
+        // 새로운 주문 시작
+        function startNewOrder() {
+            currentOrder = {};
+            selectedPayment = '';
+            currentScreen = 'welcome';
+            document.getElementById('completionScreen').classList.add('hidden');
+            document.getElementById('welcomeScreen').classList.remove('hidden');
+        }
+        
+        // 초기 설정
+        document.addEventListener('DOMContentLoaded', function() {
+            renderMenu();
+            updateOrderSummary();
+        });
+    </script>
+</body>
+</html>
