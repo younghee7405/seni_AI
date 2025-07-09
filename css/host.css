@@ -396,4 +396,9 @@ body {
         align-items: flex-start;
         gap: 5px;
     }
+    .logo { font-size: 1.5em; }
+    .screen-title, .header, h2, h3 { font-size: 1.2em !important; }
+    .screen-subtitle, .menu-item-name, .menu-item-desc, .order-summary h3, .order-item, .completion-message, .receipt-number, .appointment-time, .waiting-info, p, span, label, .btn, .action-btn {
+        font-size: 1em !important;
+    }
 }

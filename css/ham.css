@@ -370,3 +370,11 @@
         .step.completed {
             background: #28a745;
         }
+
+@media (max-width: 768px) {
+    .logo { font-size: 1.5em; }
+    .screen-title, .kiosk-header, h2, h3 { font-size: 1.2em !important; }
+    .screen-subtitle, .menu-item h3, .menu-item .price, .order-summary h3, .order-item, .completion-message, .order-number, p, span, label, .btn, .action-btn, .start-btn, .next-btn, .back-btn {
+        font-size: 1em !important;
+    }
+}

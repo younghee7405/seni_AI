@@ -344,4 +344,9 @@ body {
     .payment-methods {
         grid-template-columns: 1fr;
     }
+    .logo { font-size: 1.5em; }
+    .screen-title, .header, h2, h3 { font-size: 1.2em !important; }
+    .screen-subtitle, .menu-item-name, .menu-item-price, .order-summary h3, .order-item, .completion-message, .order-number, p, span, label, .btn, .action-btn {
+        font-size: 1em !important;
+    }
 }

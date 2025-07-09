@@ -492,4 +492,9 @@
                 flex-direction: column;
                 gap: 10px;
             }
+            .logo { font-size: 1.5em; }
+            .screen-title, .header, h2, h3 { font-size: 1.2em !important; }
+            .screen-subtitle, .movie-title, .movie-info, .order-summary h3, .order-item, .completion-message, .ticket-number, p, span, label, .btn, .action-btn {
+                font-size: 1em !important;
+            }
         }
