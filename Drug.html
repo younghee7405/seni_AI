@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>약 복용 알람</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.2);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(79, 172, 254, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .alarm-list {
+            margin-top: 30px;
+        }
+
+        .alarm-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            border-left: 5px solid #4facfe;
+            transition: all 0.3s ease;
+        }
+
+        .alarm-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .alarm-item h3 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+
+        .alarm-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .alarm-time {
+            font-weight: bold;
+            color: #4facfe;
+            font-size: 1.2em;
+        }
+
+        .alarm-dosage {
+            background: #e3f2fd;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            color: #1976d2;
+        }
+
+        .alarm-notes {
+            color: #666;
+            font-style: italic;
+            margin-top: 10px;
+        }
+
+        .delete-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background: #ff3742;
+            transform: scale(1.05);
+        }
+
+        .status-message {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .current-time {
+            text-align: center;
+            font-size: 1.2em;
+            color: #4facfe;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #ff4757;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-weight: bold;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .active-alarm {
+            background: #fff3cd !important;
+            border-left-color: #ffc107 !important;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(255, 193, 7, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 193, 7, 0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💊 약 복용 알람</h1>
+            <p>건강한 복용 습관을 만들어보세요</p>
+        </div>
+
+        <div class="content">
+            <div class="current-time" id="currentTime"></div>
+            
+            <div id="statusMessage"></div>
+
+            <form id="medicationForm">
+                <div class="form-group">
+                    <label for="medicationName">약물명</label>
+                    <input type="text" id="medicationName" required placeholder="예: 타이레놀">
+                </div>
+
+                <div class="form-group">
+                    <label for="dosage">복용량</label>
+                    <input type="text" id="dosage" required placeholder="예: 1정">
+                </div>
+
+                <div class="form-group">
+                    <label for="alarmTime">알람 시간</label>
+                    <input type="time" id="alarmTime" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="frequency">복용 빈도</label>
+                    <select id="frequency" required>
+                        <option value="">선택하세요</option>
+                        <option value="once">1회</option>
+                        <option value="daily">매일</option>
+                        <option value="weekly">매주</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="notes">특이사항</label>
+                    <textarea id="notes" rows="3" placeholder="식후 복용, 물과 함께 등"></textarea>
+                </div>
+
+                <button type="submit" class="btn">알람 추가</button>
+            </form>
+
+            <div class="alarm-list">
+                <h2>등록된 알람</h2>
+                <div id="alarmList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let alarms = [];
+        let alarmCheckInterval;
+
+        // 현재 시간 표시
+        function updateCurrentTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('ko-KR', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('currentTime').textContent = `현재 시간: ${timeString}`;
+        }
+
+        // 상태 메시지 표시
+        function showStatusMessage(message, type) {
+            const statusDiv = document.getElementById('statusMessage');
+            statusDiv.innerHTML = `<div class="status-message ${type}">${message}</div>`;
+            setTimeout(() => {
+                statusDiv.innerHTML = '';
+            }, 3000);
+        }
+
+        // 알림 표시
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.remove();
+            }, 5000);
+        }
+
+        // 알람 추가
+        function addAlarm(medication) {
+            const alarm = {
+                id: Date.now(),
+                ...medication,
+                isActive: true
+            };
+            alarms.push(alarm);
+            renderAlarms();
+            showStatusMessage('알람이 성공적으로 추가되었습니다!', 'success');
+        }
+
+        // 알람 삭제
+        function deleteAlarm(id) {
+            alarms = alarms.filter(alarm => alarm.id !== id);
+            renderAlarms();
+            showStatusMessage('알람이 삭제되었습니다.', 'success');
+        }
+
+        // 알람 목록 렌더링
+        function renderAlarms() {
+            const alarmList = document.getElementById('alarmList');
+            
+            if (alarms.length === 0) {
+                alarmList.innerHTML = '<p style="text-align: center; color: #666; font-style: italic;">등록된 알람이 없습니다.</p>';
+                return;
+            }
+
+            alarmList.innerHTML = alarms.map(alarm => `
+                <div class="alarm-item" id="alarm-${alarm.id}">
+                    <h3>${alarm.medicationName}</h3>
+                    <div class="alarm-info">
+                        <span class="alarm-time">${alarm.alarmTime}</span>
+                        <span class="alarm-dosage">${alarm.dosage}</span>
+                    </div>
+                    <div>
+                        <strong>빈도:</strong> ${getFrequencyText(alarm.frequency)}
+                    </div>
+                    ${alarm.notes ? `<div class="alarm-notes">특이사항: ${alarm.notes}</div>` : ''}
+                    <div style="margin-top: 15px;">
+                        <button class="delete-btn" onclick="deleteAlarm(${alarm.id})">삭제</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 빈도 텍스트 변환
+        function getFrequencyText(frequency) {
+            const frequencyMap = {
+                'once': '1회',
+                'daily': '매일',
+                'weekly': '매주'
+            };
+            return frequencyMap[frequency] || frequency;
+        }
+
+        // 알람 확인
+        function checkAlarms() {
+            const now = new Date();
+            const currentTime = now.toTimeString().slice(0, 5);
+
+            alarms.forEach(alarm => {
+                if (alarm.alarmTime === currentTime && alarm.isActive) {
+                    const alarmElement = document.getElementById(`alarm-${alarm.id}`);
+                    if (alarmElement) {
+                        alarmElement.classList.add('active-alarm');
+                    }
+                    
+                    showNotification(`💊 ${alarm.medicationName} 복용 시간입니다! (${alarm.dosage})`);
+                    
+                    // 알람 소리 (브라우저 알림)
+                    if (Notification.permission === 'granted') {
+                        new Notification('약 복용 알람', {
+                            body: `${alarm.medicationName} 복용 시간입니다! (${alarm.dosage})`,
+                            icon: '💊'
+                        });
+                    }
+
+                    // 1회성 알람인 경우 비활성화
+                    if (alarm.frequency === 'once') {
+                        alarm.isActive = false;
+                    }
+
+                    // 5초 후 하이라이트 제거
+                    setTimeout(() => {
+                        if (alarmElement) {
+                            alarmElement.classList.remove('active-alarm');
+                        }
+                    }, 5000);
+                }
+            });
+        }
+
+        // 알림 권한 요청
+        function requestNotificationPermission() {
+            if ('Notification' in window && Notification.permission === 'default') {
+                Notification.requestPermission();
+            }
+        }
+
+        // 폼 제출 처리
+        document.getElementById('medicationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const medication = {
+                medicationName: formData.get('medicationName'),
+                dosage: formData.get('dosage'),
+                alarmTime: formData.get('alarmTime'),
+                frequency: formData.get('frequency'),
+                notes: formData.get('notes')
+            };
+
+            addAlarm(medication);
+            this.reset();
+        });
+
+        // 초기화
+        function init() {
+            updateCurrentTime();
+            setInterval(updateCurrentTime, 1000);
+            
+            renderAlarms();
+            
+            // 알람 확인 (1초마다)
+            alarmCheckInterval = setInterval(checkAlarms, 1000);
+            
+            // 알림 권한 요청
+            requestNotificationPermission();
+        }
+
+        // 페이지 로드 시 초기화
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>
