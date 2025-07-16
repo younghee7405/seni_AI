@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureLife - 보안 & 안전</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            animation: fadeInUp 1s ease-out 0.6s both;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);
+        }
+
+        .features {
+            padding: 4rem 0;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            margin: 2rem auto;
+            border-radius: 20px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .security-tips {
+            padding: 4rem 0;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            margin: 2rem auto;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .tip-card {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            color: white;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .tip-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px rgba(79, 172, 254, 0.3);
+        }
+
+        .threat-detector {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 3rem;
+            border-radius: 20px;
+            margin: 2rem 0;
+            text-align: center;
+            color: white;
+        }
+
+        .detector-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 1rem;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 10px;
+            margin: 1rem 0;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .check-button {
+            background: linear-gradient(45deg, #43e97b, #38f9d7);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-left: 1rem;
+        }
+
+        .check-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(67, 233, 123, 0.3);
+        }
+
+        .result {
+            margin-top: 2rem;
+            padding: 1rem;
+            border-radius: 10px;
+            font-weight: bold;
+            display: none;
+        }
+
+        .safe {
+            background: rgba(76, 175, 80, 0.8);
+            color: white;
+        }
+
+        .suspicious {
+            background: rgba(255, 152, 0, 0.8);
+            color: white;
+        }
+
+        .dangerous {
+            background: rgba(244, 67, 54, 0.8);
+            color: white;
+        }
+
+        .footer {
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+
+        .mobile-menu {
+            display: none;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu {
+                display: block;
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav container">
+            <div class="logo">🔒 SecureLife</div>
+            <ul class="nav-links">
+                <li><a href="#home">홈</a></li>
+                <li><a href="#features">보안기능</a></li>
+                <li><a href="#tips">안전팁</a></li>
+                <li><a href="#detector">위협탐지</a></li>
+                <li><a href="#contact">연락처</a></li>
+            </ul>
+            <div class="mobile-menu">☰</div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero container" id="home">
+            <h1>안전한 디지털 생활을 위한 완벽한 가이드</h1>
+            <p>개인정보 보호와 사기 방지로 당신의 디지털 라이프를 안전하게 지켜보세요</p>
+            <a href="#features" class="cta-button">보안 시작하기</a>
+        </section>
+
+        <section class="features container" id="features">
+            <h2 style="text-align: center; color: white; font-size: 2.5rem; margin-bottom: 1rem;">핵심 보안 기능</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">🛡️</span>
+                    <h3>개인정보 보호</h3>
+                    <p>강력한 암호화와 프라이버시 설정으로 개인정보를 안전하게 보호합니다.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🔍</span>
+                    <h3>사기 탐지</h3>
+                    <p>실시간 모니터링으로 의심스러운 활동과 사기 시도를 즉시 탐지합니다.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🔐</span>
+                    <h3>보안 인증</h3>
+                    <p>2단계 인증과 생체 인식으로 계정 보안을 강화합니다.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">📱</span>
+                    <h3>모바일 보안</h3>
+                    <p>스마트폰과 태블릿을 위한 종합적인 보안 솔루션을 제공합니다.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🌐</span>
+                    <h3>안전한 브라우징</h3>
+                    <p>악성 웹사이트와 피싱 사이트로부터 안전한 인터넷 서핑을 보장합니다.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">💳</span>
+                    <h3>금융 보안</h3>
+                    <p>온라인 결제와 금융 거래를 안전하게 보호하는 전문 보안 서비스입니다.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="security-tips container" id="tips">
+            <h2 style="text-align: center; color: #333; font-size: 2.5rem; margin-bottom: 1rem;">필수 보안 팁</h2>
+            <div class="tips-grid">
+                <div class="tip-card" onclick="showTipDetail(1)">
+                    <h3>🔑 강력한 비밀번호</h3>
+                    <p>대소문자, 숫자, 특수문자를 조합한 12자 이상의 비밀번호를 사용하세요.</p>
+                </div>
+                <div class="tip-card" onclick="showTipDetail(2)">
+                    <h3>📧 피싱 메일 주의</h3>
+                    <p>의심스러운 링크나 첨부파일을 클릭하기 전에 반드시 확인하세요.</p>
+                </div>
+                <div class="tip-card" onclick="showTipDetail(3)">
+                    <h3>🔄 정기 업데이트</h3>
+                    <p>운영체제와 소프트웨어를 항상 최신 버전으로 유지하세요.</p>
+                </div>
+                <div class="tip-card" onclick="showTipDetail(4)">
+                    <h3>🛡️ 백업 중요성</h3>
+                    <p>중요한 데이터는 정기적으로 백업하여 안전하게 보관하세요.</p>
+                </div>
+                <div class="tip-card" onclick="showTipDetail(5)">
+                    <h3>📱 공용 WiFi 주의</h3>
+                    <p>공용 WiFi 사용 시 VPN을 활용하여 안전한 연결을 유지하세요.</p>
+                </div>
+                <div class="tip-card" onclick="showTipDetail(6)">
+                    <h3>🎯 소셜 미디어 설정</h3>
+                    <p>소셜 미디어 개인정보 설정을 정기적으로 점검하고 조정하세요.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="threat-detector container" id="detector">
+            <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">🔍 위협 탐지 도구</h2>
+            <p>의심스러운 링크나 이메일 주소를 확인해보세요</p>
+            <div>
+                <input type="text" class="detector-input" placeholder="URL 또는 이메일 주소 입력" id="threatInput">
+                <button class="check-button" onclick="checkThreat()">검사하기</button>
+            </div>
+            <div id="threatResult" class="result"></div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 SecureLife. 모든 권리 보유. 안전한 디지털 생활을 위해 함께합니다.</p>
+        </div>
+    </footer>
+
+    <script>
+        // 부드러운 스크롤 효과
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // 팁 카드 클릭 시 상세 정보 표시
+        function showTipDetail(tipNumber) {
+            const tips = {
+                1: "강력한 비밀번호는 해커의 공격을 막는 첫 번째 방어선입니다. 개인정보나 단순한 패턴을 피하고, 각 계정마다 다른 비밀번호를 사용하세요.",
+                2: "피싱 공격은 점점 정교해지고 있습니다. 발신자 확인, URL 검증, 개인정보 요구 시 직접 확인하는 습관을 기르세요.",
+                3: "보안 업데이트는 새로운 취약점을 패치합니다. 자동 업데이트를 활성화하고 정기적으로 시스템을 점검하세요.",
+                4: "랜섬웨어나 하드웨어 고장에 대비해 3-2-1 백업 규칙을 따르세요. 3개 복사본, 2개 매체, 1개 원격 저장소.",
+                5: "공용 WiFi는 해커들이 즐겨 사용하는 공격 경로입니다. VPN 사용과 HTTPS 사이트만 접속하는 것을 권장합니다.",
+                6: "개인정보 노출을 최소화하고 친구 목록을 정기적으로 정리하세요. 위치 정보 공유는 특히 주의가 필요합니다."
+            };
+            
+            alert(tips[tipNumber]);
+        }
+
+        // 위협 탐지 시뮬레이션
+        function checkThreat() {
+            const input = document.getElementById('threatInput').value;
+            const result = document.getElementById('threatResult');
+            
+            if (!input.trim()) {
+                alert('검사할 URL 또는 이메일 주소를 입력해주세요.');
+                return;
+            }
+            
+            result.style.display = 'block';
+            
+            // 간단한 위협 탐지 로직 시뮬레이션
+            const suspiciousPatterns = [
+                'bit.ly', 'tinyurl.com', 'urgent', 'winner', 'prize', 
+                'verify-account', 'suspended', 'click-here', 'free-money',
+                'phishing', 'malware', 'virus'
+            ];
+            
+            const dangerousPatterns = [
+                'malware', 'virus', 'trojan', 'ransomware',
+                'steal', 'hack', 'password', 'credential'
+            ];
+            
+            let threatLevel = 'safe';
+            let message = '✅ 안전한 것으로 보입니다.';
+            
+            const lowerInput = input.toLowerCase();
+            
+            if (dangerousPatterns.some(pattern => lowerInput.includes(pattern))) {
+                threatLevel = 'dangerous';
+                message = '⚠️ 위험한 위협이 감지되었습니다! 접근을 피하세요.';
+            } else if (suspiciousPatterns.some(pattern => lowerInput.includes(pattern))) {
+                threatLevel = 'suspicious';
+                message = '🔍 의심스러운 요소가 발견되었습니다. 주의하세요.';
+            }
+            
+            result.className = `result ${threatLevel}`;
+            result.textContent = message;
+            
+            // 애니메이션 효과
+            result.style.animation = 'fadeInUp 0.5s ease-out';
+        }
+
+        // 스크롤 애니메이션
+        window.addEventListener('scroll', () => {
+            const cards = document.querySelectorAll('.feature-card, .tip-card');
+            cards.forEach(card => {
+                const cardTop = card.getBoundingClientRect().top;
+                const cardVisible = 150;
+                
+                if (cardTop < window.innerHeight - cardVisible) {
+                    card.style.animation = 'fadeInUp 0.6s ease-out';
+                }
+            });
+        });
+
+        // 모바일 메뉴 토글
+        document.querySelector('.mobile-menu').addEventListener('click', function() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        // 페이지 로드 시 환영 메시지
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const welcome = document.createElement('div');
+                welcome.style.cssText = `
+                    position: fixed;
+                    top: 100px;
+                    right: 20px;
+                    background: linear-gradient(45deg, #43e97b, #38f9d7);
+                    color: white;
+                    padding: 1rem 2rem;
+                    border-radius: 10px;
+                    z-index: 1000;
+                    animation: fadeInUp 0.5s ease-out;
+                    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+                `;
+                welcome.textContent = '🎉 SecureLife에 오신 것을 환영합니다!';
+                document.body.appendChild(welcome);
+                
+                setTimeout(() => {
+                    welcome.remove();
+                }, 3000);
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

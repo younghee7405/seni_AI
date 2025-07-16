@@ -252,22 +252,22 @@
             <form id="medicationForm">
                 <div class="form-group">
                     <label for="medicationName">약물명</label>
-                    <input type="text" id="medicationName" required placeholder="예: 타이레놀">
+                    <input type="text" id="medicationName" name="medicationName" required placeholder="예: 타이레놀">
                 </div>
 
                 <div class="form-group">
                     <label for="dosage">복용량</label>
-                    <input type="text" id="dosage" required placeholder="예: 1정">
+                    <input type="text" id="dosage" name="dosage" required placeholder="예: 1정">
                 </div>
 
                 <div class="form-group">
                     <label for="alarmTime">알람 시간</label>
-                    <input type="time" id="alarmTime" required>
+                    <input type="time" id="alarmTime" name="alarmTime" required>
                 </div>
 
                 <div class="form-group">
                     <label for="frequency">복용 빈도</label>
-                    <select id="frequency" required>
+                    <select id="frequency" name="frequency" required>
                         <option value="">선택하세요</option>
                         <option value="once">1회</option>
                         <option value="daily">매일</option>
@@ -277,7 +277,7 @@
 
                 <div class="form-group">
                     <label for="notes">특이사항</label>
-                    <textarea id="notes" rows="3" placeholder="식후 복용, 물과 함께 등"></textarea>
+                    <textarea id="notes" name="notes" rows="3" placeholder="식후 복용, 물과 함께 등"></textarea>
                 </div>
 
                 <button type="submit" class="btn">알람 추가</button>

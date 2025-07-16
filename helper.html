@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>24시간 지원 서비스</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            animation: slideDown 0.8s ease-out;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .status-badge {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            border-radius: 50%;
+            animation: blink 1.5s infinite;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 50px 0;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            color: white;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: textGlow 3s ease-in-out infinite;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        /* Support Options */
+        .support-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+
+        .support-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .support-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .support-card:hover::before {
+            left: 100%;
+        }
+
+        .support-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .support-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .support-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .support-card p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .support-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .support-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .support-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Chat Widget */
+        .chat-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .chat-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #FF6B6B, #FF8E8E);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            animation: bounce 2s infinite;
+            transition: all 0.3s ease;
+        }
+
+        .chat-button:hover {
+            transform: scale(1.1);
+        }
+
+        .chat-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 300px;
+            height: 400px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 15px;
+            word-wrap: break-word;
+        }
+
+        .message.bot {
+            background: #f0f0f0;
+            align-self: flex-start;
+        }
+
+        .message.user {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            align-self: flex-end;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            outline: none;
+        }
+
+        .chat-input button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 20px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        /* Animations */
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.5; }
+        }
+
+        @keyframes textGlow {
+            0%, 100% { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); }
+            50% { text-shadow: 2px 2px 20px rgba(255, 255, 255, 0.5); }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .support-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .chat-window {
+                width: 280px;
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo">🛠️ 24시간 지원센터</div>
+                <div class="status-badge">
+                    <div class="status-dot"></div>
+                    온라인 상담 가능
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <section class="hero">
+                <h1>언제든지 도움이 필요할 때</h1>
+                <p>친절한 전문 상담원이 24시간 대기 중입니다. 어떤 문제든 신속하고 정확하게 해결해드립니다.</p>
+            </section>
+
+            <section class="support-options">
+                <div class="support-card">
+                    <div class="support-icon">💬</div>
+                    <h3>실시간 채팅</h3>
+                    <p>전문 상담원과 실시간으로 대화하며 즉시 문제를 해결하세요.</p>
+                    <button class="support-btn" onclick="openChat()">채팅 시작</button>
+                </div>
+
+                <div class="support-card">
+                    <div class="support-icon">📞</div>
+                    <h3>전화 상담</h3>
+                    <p>음성 통화로 더 자세한 상담을 받으실 수 있습니다.</p>
+                    <button class="support-btn" onclick="callSupport()">전화 연결</button>
+                </div>
+
+                <div class="support-card">
+                    <div class="support-icon">📧</div>
+                    <h3>이메일 지원</h3>
+                    <p>복잡한 문제나 자료가 필요한 경우 이메일로 상담하세요.</p>
+                    <button class="support-btn" onclick="emailSupport()">이메일 보내기</button>
+                </div>
+
+                <div class="support-card">
+                    <div class="support-icon">🎥</div>
+                    <h3>화상 상담</h3>
+                    <p>화면을 공유하며 직접적인 기술 지원을 받으세요.</p>
+                    <button class="support-btn" onclick="videoSupport()">화상 상담</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Chat Widget -->
+    <div class="chat-widget">
+        <button class="chat-button" onclick="toggleChat()">💬</button>
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                상담원과 대화하기
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot">
+                    안녕하세요! 24시간 지원센터입니다. 어떤 도움이 필요하신가요?
+                </div>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="messageInput" placeholder="메시지를 입력하세요..." onkeypress="handleEnter(event)">
+                <button onclick="sendMessage()">전송</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let chatOpen = false;
+        let messageCount = 0;
+
+        function toggleChat() {
+            const chatWindow = document.getElementById('chatWindow');
+            chatOpen = !chatOpen;
+            chatWindow.style.display = chatOpen ? 'flex' : 'none';
+        }
+
+        function openChat() {
+            const chatWindow = document.getElementById('chatWindow');
+            chatOpen = true;
+            chatWindow.style.display = 'flex';
+            
+            // 스크롤을 맨 아래로
+            setTimeout(() => {
+                const chatMessages = document.getElementById('chatMessages');
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 100);
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                addMessage(message, 'user');
+                input.value = '';
+                
+                // 상담원 응답 시뮬레이션
+                setTimeout(() => {
+                    const responses = [
+                        "네, 말씀해주신 내용을 확인했습니다. 더 자세한 정보를 알려주시겠어요?",
+                        "문제 해결을 위해 몇 가지 확인이 필요합니다. 잠시만 기다려주세요.",
+                        "친절하게 안내해드리겠습니다. 다른 궁금한 점이 있으시면 언제든 말씀해주세요.",
+                        "해당 문제에 대한 해결 방법을 찾았습니다. 단계별로 안내해드리겠습니다.",
+                        "추가적인 도움이 필요하시면 언제든 연락해주세요. 24시간 지원해드립니다."
+                    ];
+                    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                    addMessage(randomResponse, 'bot');
+                }, 1000 + Math.random() * 2000);
+            }
+        }
+
+        function addMessage(text, type) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = text;
+            chatMessages.appendChild(messageDiv);
+            
+            // 스크롤을 맨 아래로
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            messageCount++;
+        }
+
+        function handleEnter(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function callSupport() {
+            alert('전화 연결 중입니다...\n고객지원: 1588-1234\n24시간 상담 가능');
+        }
+
+        function emailSupport() {
+            alert('이메일 지원 페이지로 이동합니다...\nsupport@company.com');
+        }
+
+        function videoSupport() {
+            alert('화상 상담 연결 중입니다...\n상담원이 곧 연결됩니다.');
+        }
+
+        // 페이지 로드 시 애니메이션 효과
+        window.addEventListener('load', function() {
+            const cards = document.querySelectorAll('.support-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.animation = `fadeInUp 0.6s ease-out forwards`;
+                }, index * 200);
+            });
+        });
+
+        // 채팅 버튼 주기적 알림
+        setInterval(() => {
+            if (!chatOpen) {
+                const chatButton = document.querySelector('.chat-button');
+                chatButton.style.animation = 'none';
+                setTimeout(() => {
+                    chatButton.style.animation = 'bounce 2s infinite';
+                }, 100);
+            }
+        }, 10000);
+    </script>
+</body>
+</html>
