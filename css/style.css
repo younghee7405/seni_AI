@@ -490,9 +490,11 @@
             .features-grid {
                 grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
                 gap: 20px;
+                justify-items: center;
             }
             .feature-card {
                 padding: 18px;
                 font-size: 0.95em;
+                margin: 0 auto;
             }
         }
